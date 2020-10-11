@@ -1,3 +1,4 @@
+from django.http import request
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Main
 from news.models import News
@@ -18,3 +19,9 @@ def about(request):
     site = Main.objects.get(name = "My Site Settings")
 
     return render(request, 'front/about.html', {'site':site}) 
+
+
+def panel(request):
+
+
+    return render(request, 'back/home.html')
