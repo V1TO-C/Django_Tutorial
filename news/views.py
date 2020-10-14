@@ -22,6 +22,21 @@ def news_list(request):
 
 def news_add(request):
 
-    
+    if request.method == "POST":
+
+        newstitle = request.POST.get('newstitle')
+        newscat = request.POST.get('newscat')
+        newstxtshort = request.POST.get('newstxtshort')
+        newstxt = request.POST.get('newstxt')
+
+        if newstitle == "" or newstxt == "" or newstxtshort == "" or newscat == "":
+            error = "All Fields Required"
+            return render(request, 'back/error.html', {'error':error})
+
+        b = News(name=newstitle, catname=newscat, catid=0, short_txt=newstxtshort, body_txt=newstxt, date="2020", pic="-", writer="-", show=0)
+        b.save()
+        return redirect('news_list')
+        
+
 
     return render(request, 'back/news_add.html')
