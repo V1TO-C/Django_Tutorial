@@ -1,8 +1,10 @@
 from django.http import request
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import News
+from cat.models import Cat
 from main.models import Main
 from django.core.files.storage import FileSystemStorage
+import datetime
 
 # Create your views here.
 
@@ -22,6 +24,8 @@ def news_list(request):
 
 
 def news_add(request):
+
+    cats = Cat.objects.all()
 
     if request.method == "POST":
 
@@ -43,24 +47,73 @@ def news_add(request):
             if str(myfile.content_type).startswith("image"):
 
                 if myfile.size < 5000000 :
-                    b = News(name=newstitle, catname=newscat, catid=0, short_txt=newstxtshort, body_txt=newstxt, date="2020",picname=filename, picurl=url, writer="-", show=0)
+                    b = News(name=newstitle, catname=newscat, catid=0, short_txt=newstxtshort, body_txt=newstxt, date=dateNow(), time=timeNow(), picname=filename, picurl=url, writer="-", show=0)
                     b.save()
                     return redirect('news_list')
 
                 else:
+                    fs = FileSystemStorage()
+                    fs.delete(myfile)
+
                     error = "Your Pic Is Bigger Then 5 MB"
                     return render(request, 'back/error.html', {'error':error})
 
             else:
+                fs = FileSystemStorage()
+                fs.delete(myfile)
+
                 error = "Your Pic Format is not supported"
                 return render(request, 'back/error.html', {'error':error})
 
         except:
             error = "Please Input Your Image"
-            return render(request, 'back/error.html', {'error':error})
+            return render(request, 'back/error.html', {'error':error})   
 
-        
-        
+    return render(request, 'back/news_add.html', {'cats':cats})
 
 
-    return render(request, 'back/news_add.html')
+def news_delete(request, pk):
+    try:
+        article = News.objects.get(pk=pk)
+        fs = FileSystemStorage()
+        fs.delete(article.picname)
+        article.delete()
+
+        return redirect('news_list')
+    
+    except:
+        error = "Something Wrong"
+        return render(request, 'back/error.html', {'error':error})   
+
+# help functions.
+
+def dateNow():
+    now = datetime.datetime.now()
+    year = now.year
+    month = now.month
+    day = now.day
+
+    if len(str(month)) == 1:
+        month = "0" + str(month)
+
+    if len(str(day)) == 1:
+        day = "0" + str(day)
+
+    date = year + "/" + month + "/" + day
+    return date
+
+
+def timeNow():
+    now = datetime.datetime.now()
+    hour = now.hour
+    minute = now.minute
+
+    if len(str(hour)) == 1:
+        hour = "0" + str(hour)
+
+    if len(str(minute)) == 1:
+        minute = "0" + str(minute)
+
+    time = hour + ":" + minute
+
+    return time

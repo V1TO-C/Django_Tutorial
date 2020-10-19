@@ -7,13 +7,13 @@
     <div class="content-header">
         <div class="header-section">
             <h1>
-                <i class="fa fa-table"></i>News List<br><small>You can add, edit and delete your News!</small>
+                <i class="fa fa-table"></i>Categories List<br><small>You can add, edit and delete your Cathegory!</small>
             </h1>
         </div>
     </div>
     <ul class="breadcrumb breadcrumb-top">
-        <li>News</li>
-        <li><a href="/panel/news_list/">List</a></li>
+        <li>Category</li>
+        <li><a href="/news/panel/cat_list/">List</a></li>
     </ul>
 <!-- END Datatables Header -->
 
@@ -28,29 +28,19 @@
                 <thead>
                     <tr>
                         <th class="text-center">ID</th>
-                        <th class="text-center">Image</th>
                         <th>Title</th>
-                        <th>Date & Time</th>
-                        <th>Category</th>
-                        <th>Writer</th>
-                        <th>Views</th>
                         <th class="text-center">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for i in news %}
+                    {% for i in cat %}
                     <tr>
                         <td class="text-center">{{i.pk}}</td>
-                        <td class="text-center"><img style="display: inline-block; width:50px; height:50px" src="{{i.picurl}}" alt="avatar" class="img-circle"></td>
                         <td>{{i.name}}</td>
-                        <td>{{i.date}} | {{i.time}}</td>
-                        <td>{{i.catname}}</td>
-                        <td>{{i.writer}}</td>
-                        <td>{{i.views}}</td>
                         <td class="text-center">
                             <div class="btn-group">
                                 <a href="#" data-toggle="tooltip" title="Edit" class="btn btn-xs btn-default"><i class="fa fa-pencil"></i>Edit</a>
-                                <a href="{% url 'news_delete' pk=i.pk %}" data-toggle="tooltip" title="Delete" class="btn btn-xs btn-danger"><i class="fa fa-times"></i>Delete</a>
+                                <a href="{% url 'cat_delete' pk=i.pk %}" data-toggle="tooltip" title="Delete" class="btn btn-xs btn-danger"><i class="fa fa-times"></i>Delete</a>
                             </div>
                         </td>
                     </tr>

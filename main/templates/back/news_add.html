@@ -13,7 +13,7 @@
     </div>
     <ul class="breadcrumb breadcrumb-top">
         <li>News</li>
-        <li><a href="/news/panel/add/">List</a></li>
+        <li><a href="/panel/news_add/">List</a></li>
     </ul>
 <!-- END Datatables Header -->
 
@@ -36,10 +36,12 @@
                     </div>
                     <div class="col-md-6">
                         <select id="newscat" name="newscat" class="select-chosen" data-placeholder="Choose a Category.." style="width: 250px;">
+                            {% for i in cats %}
                             <option></option><!-- Required for data-placeholder attribute to work with Chosen plugin -->
-                            <option value="cat1">Cat 1</option>
-                            <option value="cat2">Cat 2</option>
-                            <option value="cat3">Cat 3</option>
+                            <option value="cat1">{{i.name}}</option>
+                            {% endfor %}   
+                            
+
                         </select>
                     </div>
                 </div>
