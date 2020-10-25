@@ -35,13 +35,11 @@
                         <input type="text" id="newstitle" name="newstitle" class="form-control" placeholder="News title">
                     </div>
                     <div class="col-md-6">
-                        <select id="newscat" name="newscat" class="select-chosen" data-placeholder="Choose a Category.." style="width: 250px;">
-                            {% for i in cats %}
+                        <select id="newssubcat" name="newssubcat" class="select-chosen" data-placeholder="Choose a SubCategory.." style="width: 250px;">
+                            {% for i in subcats %}
                             <option></option><!-- Required for data-placeholder attribute to work with Chosen plugin -->
-                            <option value="cat1">{{i.name}}</option>
+                            <option value="{{i.pk}}">{{i.catname}} | {{i.name}}</option>
                             {% endfor %}   
-                            
-
                         </select>
                     </div>
                 </div>

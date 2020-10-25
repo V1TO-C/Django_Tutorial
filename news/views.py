@@ -2,6 +2,7 @@ from django.http import request
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import News
 from cat.models import Cat
+from subcat.models import SubCat
 from main.models import Main
 from django.core.files.storage import FileSystemStorage
 import datetime
@@ -26,15 +27,17 @@ def news_list(request):
 def news_add(request):
 
     cats = Cat.objects.all()
+    subcats = SubCat.objects.all()
 
     if request.method == "POST":
 
         newstitle = request.POST.get('newstitle')
-        newscat = request.POST.get('newscat')
+        newssubcat = request.POST.get('newssubcat')
         newstxtshort = request.POST.get('newstxtshort')
         newstxt = request.POST.get('newstxt')
+        subcat = SubCat.objects.get(pk=newssubcat)
 
-        if newstitle == "" or newstxt == "" or newstxtshort == "" or newscat == "":
+        if newstitle == "" or newstxt == "" or newstxtshort == "" or newssubcat == "":
             error = "All Fields Required"
             return render(request, 'back/error.html', {'error':error})
 
@@ -43,33 +46,27 @@ def news_add(request):
             fs = FileSystemStorage()
             filename = fs.save(myfile.name, myfile)
             url = fs.url(filename)
-
-            if str(myfile.content_type).startswith("image"):
-
-                if myfile.size < 5000000 :
-                    b = News(name=newstitle, catname=newscat, catid=0, short_txt=newstxtshort, body_txt=newstxt, date=dateNow(), time=timeNow(), picname=filename, picurl=url, writer="-", show=0)
-                    b.save()
-                    return redirect('news_list')
-
-                else:
-                    fs = FileSystemStorage()
-                    fs.delete(myfile)
-
-                    error = "Your Pic Is Bigger Then 5 MB"
-                    return render(request, 'back/error.html', {'error':error})
-
-            else:
-                fs = FileSystemStorage()
-                fs.delete(myfile)
-
-                error = "Your Pic Format is not supported"
-                return render(request, 'back/error.html', {'error':error})
-
         except:
             error = "Please Input Your Image"
             return render(request, 'back/error.html', {'error':error})   
 
-    return render(request, 'back/news_add.html', {'cats':cats})
+        if str(myfile.content_type).startswith("image"):
+            if myfile.size < 5000000 :
+                b = News(name=newstitle, catname=subcat.catname, subcatname=subcat.name, catid=0, short_txt=newstxtshort, body_txt=newstxt, date=dateNow(), time=timeNow(), picname=filename, picurl=url, writer="-", show=0)
+                b.save()
+                return redirect('news_list')
+            else:
+                fs = FileSystemStorage()
+                fs.delete(myfile)
+                error = "Your Pic Is Bigger Then 5 MB"
+                return render(request, 'back/error.html', {'error':error})
+        else:
+            fs = FileSystemStorage()
+            fs.delete(myfile)
+            error = "Your Pic Format is not supported"
+            return render(request, 'back/error.html', {'error':error})
+
+    return render(request, 'back/news_add.html', {'cats':cats, 'subcats':subcats})
 
 
 def news_delete(request, pk):
@@ -99,7 +96,7 @@ def dateNow():
     if len(str(day)) == 1:
         day = "0" + str(day)
 
-    date = year + "/" + month + "/" + day
+    date = str(year) + "/" + str(month) + "/" + str(day)
     return date
 
 
@@ -114,6 +111,6 @@ def timeNow():
     if len(str(minute)) == 1:
         minute = "0" + str(minute)
 
-    time = hour + ":" + minute
+    time = str(hour) + ":" + str(minute)
 
     return time

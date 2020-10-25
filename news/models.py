@@ -14,7 +14,8 @@ class News(models.Model):
     picname = models.TextField()
     picurl = models.TextField(default='-')
     writer = models.CharField(max_length=50)
-    catname = models.CharField(max_length=50, default="-")
+    catname = models.CharField(max_length=20, default="-")
+    subcatname = models.CharField(max_length=20, default="-")
     catid = models.IntegerField(default=0)
     show = models.IntegerField(default=0)
 

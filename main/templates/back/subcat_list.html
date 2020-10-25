@@ -12,7 +12,7 @@
         </div>
     </div>
     <ul class="breadcrumb breadcrumb-top">
-        <li>Category</li>
+        <li>SubCategory</li>
         <li><a href="/news/panel/cat_list/">List</a></li>
     </ul>
 <!-- END Datatables Header -->
@@ -20,7 +20,7 @@
 <!-- Datatables Content -->
     <div class="block full">
         <div class="block-title">
-            <h2><strong>Cathegories</strong> List</h2>
+            <h2><strong>Subcathegories</strong> List</h2>
         </div>
 
         <div class="table-responsive">
@@ -28,19 +28,21 @@
                 <thead>
                     <tr>
                         <th class="text-center">ID</th>
-                        <th>Cathegory</th>
+                        <th class="text-center">Name</th>
+                        <th class="text-center">Cathegory</th>
                         <th class="text-center">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for i in cat %}
+                    {% for i in subcats %}
                     <tr>
                         <td class="text-center">{{i.pk}}</td>
-                        <td>{{i.name}}</td>
+                        <td class="text-center">{{i.name}}</td>
+                        <td class="text-center">{{i.catname}}</td>
                         <td class="text-center">
                             <div class="btn-group">
                                 <a href="#" data-toggle="tooltip" title="Edit" class="btn btn-xs btn-default"><i class="fa fa-pencil"></i>Edit</a>
-                                <a href="{% url 'cat_delete' pk=i.pk %}" data-toggle="tooltip" title="Delete" class="btn btn-xs btn-danger"><i class="fa fa-times"></i>Delete</a>
+                                <a href="{% url 'subcat_delete' pk=i.pk %}" data-toggle="tooltip" title="Delete" class="btn btn-xs btn-danger"><i class="fa fa-times"></i>Delete</a>
                             </div>
                         </td>
                     </tr>
