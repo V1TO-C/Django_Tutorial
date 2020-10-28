@@ -82,6 +82,83 @@ def news_delete(request, pk):
         error = "Something Wrong"
         return render(request, 'back/error.html', {'error':error})   
 
+
+def news_edit(request, pk):
+    try:
+        news = News.objects.get(pk=pk)
+    except:
+        error = "News not found."
+        return render(request, 'back/error.html', {'error':error})
+
+    article = News.objects.get(pk=pk)
+    subcats = SubCat.objects.all()
+
+    if request.method == "POST":
+
+        newstitle = request.POST.get('newstitle')
+        newssubcat = request.POST.get('newssubcat')
+        newstxtshort = request.POST.get('newstxtshort')
+        newstxt = request.POST.get('newstxt')
+        subcat = SubCat.objects.get(pk=newssubcat)
+
+        if newstitle == "" or newstxt == "" or newstxtshort == "" or newssubcat == "":
+            error = "All Fields Required"
+            return render(request, 'back/error.html', {'error':error})
+
+        try:
+            myfile = request.FILES['myfile']
+            fs = FileSystemStorage()
+            filename = fs.save(myfile.name, myfile)
+            url = fs.url(filename)
+        except:
+            b = News.objects.get(pk=pk)
+
+            b.name = newstitle
+            b.short_txt = newstxtshort
+            b.body_txt = newstxt
+            """b.date = dateNow()
+            b.time = timeNow() """
+            b.catname = subcat.catname
+            b.subcatname = subcat.name
+            b.catid = newssubcat
+
+            b.save()
+            return redirect('news_list')   
+
+        if str(myfile.content_type).startswith("image"):
+            if myfile.size < 5000000 :
+
+                b = News.objects.get(pk=pk)
+                fss = FileSystemStorage()
+                fss.delete(b.picname)
+
+                b.name = newstitle
+                b.short_txt = newstxtshort
+                b.body_txt = newstxt
+                """b.date = dateNow()
+                b.time = timeNow() """
+                b.picname = filename
+                b.picurl = url
+                b.catname = subcat.catname
+                b.subcatname = subcat.name
+                b.catid = newssubcat
+
+                b.save()
+                return redirect('news_list')
+            else:
+                fs = FileSystemStorage()
+                fs.delete(myfile)
+                error = "Your Pic Is Bigger Then 5 MB"
+                return render(request, 'back/error.html', {'error':error})
+        else:
+            fs = FileSystemStorage()
+            fs.delete(myfile)
+            error = "Your Pic Format is not supported"
+            return render(request, 'back/error.html', {'error':error}) 
+
+    return render(request, 'back/news_edit.html', {'pk':pk, 'article':article, 'subcats':subcats})
+
+
 # help functions.
 
 def dateNow():
